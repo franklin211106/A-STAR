@@ -1,6 +1,6 @@
 <h1>ExpNo 4 : Implement A* search algorithm for a Graph</h1> 
-<h3>Name:       </h3>
-<h3>Register Number:           </h3>
+<h3>Name:  FFRANKLIN F    </h3>
+<h3>Register Number: 212224240041          </h3>
 <H3>Aim:</H3>
 <p>To ImplementA * Search algorithm for a Graph using Python 3.</p>
 <H3>Algorithm:</H3>
@@ -49,6 +49,103 @@
     end (while loop)
 
 ``````
+<hr>
+<h2>Program:</h2>
+
+ ```python
+
+from collections import defaultdict
+H_dist ={}
+def aStarAlgo(start_node, stop_node):
+    open_set = set(start_node)
+    closed_set = set()
+    g = {}               #store distance from starting node
+    parents = {}         # parents contains an adjacency map of all nodes
+    #distance of starting node from itself is zero
+    g[start_node] = 0
+    #start_node is root node i.e it has no parent nodes
+    #so start_node is set to its own parent node
+    parents[start_node] = start_node
+    while len(open_set) > 0:
+        n = None
+        #node with lowest f() is found
+        for v in open_set:
+            if n == None or g[v] + heuristic(v) < g[n] + heuristic(n):
+                n = v
+        if n == stop_node or Graph_nodes[n] == None:
+            pass
+        else:
+            for (m, weight) in get_neighbors(n):
+                #nodes 'm' not in first and last set are added to first
+                #n is set its parent
+                if m not in open_set and m not in closed_set:
+                    open_set.add(m)
+                    parents[m] = n
+                    g[m] = g[n] + weight
+                #for each node m,compare its distance from start i.e g(m) to the
+                #from start through n node
+                else:
+                    if g[m] > g[n] + weight:
+                        #update g(m)
+                        g[m] = g[n] + weight
+                        #change parent of m to n
+                        parents[m] = n
+                        #if m in closed set,remove and add to open
+                        if m in closed_set:
+                            closed_set.remove(m)
+                            open_set.add(m)
+        if n == None:
+            print('Path does not exist!')
+            return None
+        
+        # if the current node is the stop_node
+        # then we begin reconstructin the path from it to the start_node
+        if n == stop_node:
+            path = []
+            while parents[n] != n:
+                path.append(n)
+                n = parents[n]
+            path.append(start_node)
+            path.reverse()
+            print('Path found: {}'.format(path))
+            return path
+        # remove n from the open_list, and add it to closed_list
+        # because all of his neighbors were inspected
+        open_set.remove(n)
+        closed_set.add(n)
+    print('Path does not exist!')
+    return None
+
+#define fuction to return neighbor and its distance
+#from the passed node
+def get_neighbors(v):
+    if v in Graph_nodes:
+        return Graph_nodes[v]
+    else:
+        return None
+def heuristic(n):
+    return H_dist[n]
+
+
+graph = defaultdict(list)
+n,e = map(int,input().split())
+for i in range(e):
+    u,v,cost = map(str,input().split())
+    t=(v,float(cost))
+    graph[u].append(t)
+    t1=(u,float(cost))
+    graph[v].append(t1)
+for i in range(n):
+    node,h=map(str,input().split())
+    H_dist[node]=float(h)
+
+   
+Graph_nodes=graph
+start_node,goal_node = input().split()
+aStarAlgo(start_node, goal_node)
+
+
+ ```
 
 <hr>
 <h2>Sample Graph I</h2>
@@ -87,6 +184,11 @@ J 0 <br>
 <hr>
 <h2>Sample Output</h2>
 <hr>
+
+
+<img width="786" height="487" alt="Screenshot 2026-02-09 142902" src="https://github.com/user-attachments/assets/a44f5ef2-4736-497b-a3ed-a4e334de1fca" />
+
+
 Path found: ['A', 'F', 'G', 'I', 'J']
 
 
@@ -116,4 +218,11 @@ G 0 <br>
 <hr>
 <h2>Sample Output</h2>
 <hr>
+
+<img width="782" height="483" alt="Screenshot 2026-02-09 143308" src="https://github.com/user-attachments/assets/11f3d033-4aa8-4d01-a2ca-3955800f8adb" />
+
 Path found: ['A', 'E', 'D', 'G']
+
+
+<h2>Result:</h2>
+<p>The A* search algorithm successfully finds the optimal path from the start node to the goal node by evaluating nodes based on the combined cost and heuristic function, ensuring the least-cost path is selected.</p>
